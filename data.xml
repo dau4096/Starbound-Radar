@@ -6,27 +6,31 @@
 <!-- Celestial Objects -->
 <bodies>
 
-	<!-- Our sun -->
-	<star name="Sol" position="0.0 0.0"> <children>
+	<!-- Our sun, Sol, Helios. Helios sounds cooler so I'm keeping it for now. -->
+	<star name="Helios" position="0 0">
 
 		<!-- Mercury and Venus have no moons. -->
-		<planet name="Mercury" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"> <children/> </planet>
+		<planet name="Mercury" orbitalRadius="70000.0" orbitalPeriod="88.0" />
+		<planet name="Venus" orbitalRadius="108200" orbitalPeriod="225" />
 
-		<planet name="Venus" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"> <children/> </planet>
-
-
-		<!-- Earth and Mars have their own moons. -->
-		<planet name="Earth" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"> <children>
+		<!-- Earth has the moon, and I included the ISS for an example of a man-made satellite. -->
+		<planet name="Earth" orbitalRadius="149600.0" orbitalPeriod="365.25">
 			<!-- I like the greek name for the moon better than "Moon" or "Luna", sue me. -->
-			<moon name="Selene [Σελήνη]" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"/>
-		</children> </planet>
+			<satellite name="Selene" orbitalRadius="384.0" orbitalPeriod="29.5"/>
+			<satellite name="ISS" orbitalRadius="0.4" orbitalPeriod="0.0645" /> <!-- ISS takes 92.9 minutes to orbit. Period is in days. -->
+		</planet>
 
-		<planet name="Mars" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"> <children>
-			<moon name="Phobos" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"/>
-			<moon name="Deimos" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"/>
-		</children> </planet>
+		<!-- Mars has my favourite moon in the system - Deimos. Oh, and Phobos too. -->
+		<planet name="Mars" orbitalRadius="228000.0" orbitalPeriod="687.0">
+			<satellite name="Phobos" orbitalRadius="6.0" orbitalPeriod="0.333333"/> <!-- 8hrs, 1/3 of a day. -->
+			<satellite name="Deimos" orbitalRadius="23.46" orbitalPeriod="1.25"/>
+		</planet>
 
-	</children> </star>
+
+
+		<!-- Outer planets TBA. -->
+
+	</star>
 
 </bodies>
 
@@ -36,9 +40,19 @@
 <routes>
 
 	<!-- Martian moons only -->
-	<route bodies="Phobos,Deimos" />
+	<route name="MMO-0000" locations="Phobos,Deimos" />
 
-	<!-- Goes Mercury, Earth, Moon, Earth, then loops. -->
-	<route bodies="Mercury,Earth,Moon,Earth" />
+	<!-- Goes Mercury, Earth, Selene (The Moon), Earth, then loops. -->
+	<route name="MESE-0001" locations="Mercury,Earth,Selene,Earth" />
 
 </routes>
+
+
+
+<!-- Spacecraft -->
+<spacecraft>
+
+	<!-- Ship travelling along the mars moons route. -->
+	<ship name="Mars Ship [Can't think of a good name :(]" route="MMO-0000" />
+
+</spacecraft>
