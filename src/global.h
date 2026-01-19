@@ -9,7 +9,7 @@ inline GLFWwindow* Window;
 
 inline std::unordered_map<int, bool> keyMap = {
 	//GLFW Enums mapped to boolean values (True if pressed.)
-	{GLFW_KEY_ESCAPE, false}, //Example
+	{GLFW_KEY_ESCAPE, false},
 };
 inline glm::dvec2 cursorPosition, cursorPositionPrevious, cursorDelta;
 
@@ -20,11 +20,16 @@ inline float frameRate;
 inline unsigned int frameNumber;
 
 
+inline float globalScaling = 1.0e-6f;     //Camera zoom
+inline glm::ivec2 globalOffset = display::RENDER_RESOLUTION / 2; //Camera translation
+
+
 namespace GLIndex {
 
 //Any indices required for OpenGL stuff.
 inline GLint genericVAO;
-inline GLint r1CircleVBO;
+inline GLuint r1CircleVAO, r1CircleVBO, orbitLineShader, spriteShader;
+inline glm::mat4 projectionMatrix;
 
 }
 
@@ -32,11 +37,11 @@ inline GLint r1CircleVBO;
 
 
 enum CelestialType {
-	CT_INVALID, //Not a valid type.
-	CT_STAR, //Anything stationary.
-	CT_PLANET, //Anything orbiting a star.
+	CT_INVALID,   //Not a valid type.
+	CT_STAR,      //Anything stationary.
+	CT_PLANET,    //Anything orbiting a star.
 	CT_SATELLITE, //Moons, Stations, anything orbiting a planet.
-	CT_GATE
+	CT_GATE       //Gates to other stars. Transports ships "instantly" (like teleporting but better)
 };
 
 

@@ -10,7 +10,7 @@ namespace constants {
 	//Mathematical Constants
 	constexpr float PI = glm::pi<float>();
 	constexpr float PI2 = PI * 2.0f;
-	constexpr float EXP = glm::exp<float>();
+	constexpr float EXP = glm::e<float>();
 	constexpr float INF = std::numeric_limits<float>::infinity();
 
 	constexpr float TO_RAD = 0.017453f;
@@ -24,9 +24,11 @@ namespace constants {
 }
 
 namespace sim {
-
-	//Sim constants
+	//Simulation constants;
 	constexpr float SHIP_Gs = 1.0f;
+	constexpr float C = 299792.0f;
+
+	//Scaling constants
 	constexpr unsigned int PERIOD_MULTIPLIER = 86400u; //86,400 seconds in a day.
 	constexpr unsigned int SCALE_MULTIPLIER = 1000u; //Megametres, 1 unit is 1km.
 	constexpr float TIME_PRECISION = 0.125f; //Precision to 1/8ths.
@@ -34,8 +36,8 @@ namespace sim {
 
 namespace display {
 	//Resolutions
-	constexpr glm::ivec2 WINDOW_RESOLUTION = glm::ivec2(640, 360);
-	constexpr glm::ivec2 RENDER_RESOLUTION = glm::ivec2(640, 360);
+	constexpr glm::ivec2 WINDOW_RESOLUTION = glm::ivec2(1280, 720);
+	constexpr glm::ivec2 RENDER_RESOLUTION = glm::ivec2(1280, 720);
 
 	//Opengl 460 core.
 	constexpr int OPENGL_VERSION_MAJOR = 4;

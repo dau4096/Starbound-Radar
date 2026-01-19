@@ -94,12 +94,17 @@ int main() {
 		if (keyMap[GLFW_KEY_ESCAPE]) {break; /* Quit Immediately, ESC pressed. */}
 
 
-		//Rendering logic here.
-		frame::draw();
 		//Calculate current state of the system;
 		bodies::evaluate();
 		spacecraft::evaluate();
 
+		//Draw the system in its current state;
+		frame::bodies();
+		frame::spacecraft();
+
+
+
+		glfwSwapBuffers(Window);
 
 		float dt = glfwGetTime() - frameStart;
 		if (dev::SHOW_DT_CONSOLE) {std::cout << "Frame #" << frameNumber << " took " << std::setprecision(2) << (dt * 1e3f) << "ms / Hypothetical framerate: " << static_cast<int>(1.0f / dt) << endl;}

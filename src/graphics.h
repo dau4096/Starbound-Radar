@@ -79,7 +79,8 @@ namespace frame {
 
 	inline void renderingGeneric(const std::string& shaderName="");
 
-	void draw();
+	void bodies(); //Draw the "background", of the Stars/Planets/Moons/Satellites.
+	void spacecraft(); //Draw the "notable" objects, the spacecraft flying around.
 
 }
 

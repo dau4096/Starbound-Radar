@@ -158,10 +158,15 @@ static inline void bindUniformValue(GLuint shaderProgram, const GLchar* uniformN
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 }
-
+static inline void bindUniformValue(GLuint shaderProgram, const GLchar* uniformName, glm::mat4 value) {
+	GLuint location = glGetUniformLocation(shaderProgram, uniformName);
+	if (location >= 0) {
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
 }
 
-
+}
+	
 
 
 
@@ -192,7 +197,6 @@ GLFWwindow* initialiseWindow(glm::ivec2 resolution, const char* title) {
 		raise("Failed to initialize GLEW.");
 	}
 
-	glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	return Window;
 }
 
@@ -324,7 +328,7 @@ void saveImage(GLuint textureID, bool silent=false) {
 	std::filesystem::path dirName = std::filesystem::path("saved.images");
 	std::filesystem::create_directories(dirName);
 
-	std::string timeStr = utils::getTimestamp();
+	std::string timeStr = utils::getTimestampStr();
 	std::filesystem::path imagePath = dirName / (timeStr + ".png");
 
 	stbi_write_png(
@@ -563,6 +567,59 @@ GLuint createAtomicCounter(unsigned int binding) {
 
 
 
+
+
+namespace orbits {
+
+#define NUM_LINE_SEGMENTS 128u
+void createR1CircleVBO() {
+	std::vector<glm::vec2> circleVertices;
+	for (unsigned int i=0u; i<NUM_LINE_SEGMENTS; i++) {
+	    float theta = 2.0f * constants::PI * static_cast<float>(i) / static_cast<float>(NUM_LINE_SEGMENTS);
+	    circleVertices.push_back(glm::vec2(cos(theta), sin(theta)));
+	}
+
+	//Create VBO.
+	glGenBuffers(1, &GLIndex::r1CircleVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, GLIndex::r1CircleVBO);
+	glBufferData(
+	    GL_ARRAY_BUFFER, 
+	    circleVertices.size() * sizeof(glm::vec2), 
+	    circleVertices.data(), 
+	    GL_STATIC_DRAW //The radius-1 circle vertices do not change.
+	);
+
+	//Create VAO.
+	glCreateVertexArrays(1, &GLIndex::r1CircleVAO);
+	glBindVertexArray(GLIndex::r1CircleVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, GLIndex::r1CircleVBO);
+	glEnableVertexAttribArray(0); //layout(location = 0)
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+
+	glBindVertexArray(0);
+}
+
+
+
+void drawOrbit(structs::CelestialBody* body) {
+	if (!body->hasParentBody) {return; /* No orbit line to draw. */}
+	glUseProgram(GLIndex::orbitLineShader);
+	glBindVertexArray(GLIndex::r1CircleVAO);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "centre", body->parent->position);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "radius", body->orbitalRadius);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "bodyPosition", body->position);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "scaling", globalScaling);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "offset", globalOffset);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "projectionMatrix", GLIndex::projectionMatrix);
+
+	//Draw the circle.
+	glDrawArrays(GL_LINE_LOOP, 0, NUM_LINE_SEGMENTS);
+	glBindVertexArray(0);
+}
+
+}
+
+
 void prepareOpenGL() {
 	//OpenGL setup;
 	glViewport(0, 0, display::RENDER_RESOLUTION.x, display::RENDER_RESOLUTION.y);
@@ -570,7 +627,14 @@ void prepareOpenGL() {
 	glDisable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
 #endif
-	GLIndex::genericVAO = getEmptyVAO();	
+	GLIndex::genericVAO = getEmptyVAO();
+
+
+	GLIndex::orbitLineShader = createShaderProgram("orbitLines.frag", "orbitLines.vert");
+
+	orbits::createR1CircleVBO();
+	GLIndex::projectionMatrix = glm::ortho(0.0f, float(currentRenderResolution.x), 0.0f, float(currentRenderResolution.y), -1.0f, 1.0f);
+
 
 	//Debug settings
 	glEnable(GL_DEBUG_OUTPUT);
@@ -601,8 +665,19 @@ inline void renderingGeneric(const std::string& shaderName="") {
 
 
 
-void draw() {
-	
+void bodies() {
+	//Draw the "background", of the Stars/Planets/Moons/Satellites.
+	glLineWidth(2.5f);
+	for (structs::CelestialBody& body : data::bodies) {
+		//Draw the orbital line for each;
+		graphics::orbits::drawOrbit(&body);
+	}
+	glLineWidth(1.0f);
+}
+
+void spacecraft() {
+	//Draw the "notable" objects, the spacecraft flying around.
+	//TBA.
 }
 
 
