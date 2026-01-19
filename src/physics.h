@@ -6,12 +6,12 @@
 #include "constants.h"
 
 
-namespace Planets {
+namespace bodies {
 
 }
 
 
-namespace Spacecraft {
+namespace spacecraft {
 	
 }
 

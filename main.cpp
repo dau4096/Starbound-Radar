@@ -7,6 +7,8 @@
 #include "src/global.h"
 #include "src/utils.h"
 #include "src/graphics.h"
+#include "src/physics.h"
+#include "src/loader.h"
 using namespace std;
 using namespace utils;
 using namespace glm;
@@ -79,6 +81,9 @@ int main() {
 	utils::GLErrorcheck("Window Creation", true);
 
 	graphics::prepareOpenGL();
+	std::string xmlFilePath = "data.xml";
+	loader::loadXMLdata(xmlFilePath);
+
 
 
 	frameNumber = 0u;

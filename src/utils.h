@@ -106,7 +106,7 @@ namespace utils {
 
 	std::string readFile(const std::string& filePath);
 
-	static inline std::string getTimestamp() {
+	static inline std::string getTimestampStr() {
 		time_t now = time(nullptr);
 		struct tm* timeinfo = localtime(&now);
 

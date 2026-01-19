@@ -7,7 +7,7 @@ CFLAGS = -std=c++23 -O2 -ffast-math \
 
 LIBS = -lglfw -lGLEW -lGL -lpugixml -lm -ldl -pthread
 
-SOURCES = main.cpp src/graphics.cpp src/utils.cpp src/physics.cpp
+SOURCES = main.cpp src/graphics.cpp src/utils.cpp src/physics.cpp src/loader.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 all: app
