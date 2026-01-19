@@ -20,6 +20,9 @@ namespace constants {
 	constexpr float TO_RAD = 0.017453f;
 	constexpr float TO_DEG = 57.29577f;
 
+
+	//Sim constants
+	constexpr float SHIP_Gs = 1.0f;
 }
 
 namespace display {

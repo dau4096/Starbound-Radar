@@ -1,0 +1,44 @@
+<!-- data.xml -->
+<?xml version="1.1" encoding="UTF-8"?>
+<!-- Contains data relevant to Starbound-Radar. -->
+
+
+<!-- Celestial Objects -->
+<bodies>
+
+	<!-- Our sun -->
+	<star name="Sol" position="0.0 0.0"> <children>
+
+		<!-- Mercury and Venus have no moons. -->
+		<planet name="Mercury" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"> <children/> </planet>
+
+		<planet name="Venus" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"> <children/> </planet>
+
+
+		<!-- Earth and Mars have their own moons. -->
+		<planet name="Earth" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"> <children>
+			<!-- I like the greek name for the moon better than "Moon" or "Luna", sue me. -->
+			<moon name="Selene [Σελήνη]" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"/>
+		</children> </planet>
+
+		<planet name="Mars" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"> <children>
+			<moon name="Phobos" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"/>
+			<moon name="Deimos" orbitalRadius="[PLACEHOLDER]" orbitalPeriod="[PLACEHOLDER]"/>
+		</children> </planet>
+
+	</children> </star>
+
+</bodies>
+
+
+
+<!-- Spacecraft routes. -->
+<routes>
+
+	<!-- Martian moons only -->
+	<route bodies="Phobos,Deimos" />
+
+	<!-- Goes Mercury, Earth, Moon, Earth, then loops. -->
+	<route bodies="Mercury,Earth,Moon,Earth" />
+
+</routes>

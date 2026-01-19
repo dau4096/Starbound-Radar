@@ -47,8 +47,7 @@ void handleInputs() {
 
 
 
-//#define SCREENSPACE_ONLY //Only 2D scenes.
-//#define WORLDSPACE_ONLY //Only 3D scenes.
+#define WORLDSPACE_ONLY //Only 3D scenes.
 
 
 
@@ -67,7 +66,7 @@ int main() {
 		glm::min(display::WINDOW_RESOLUTION.y, display::RENDER_RESOLUTION.y)
 	);
 
-	Window = graphics::initialiseWindow(display::WINDOW_RESOLUTION, "Graphics-Template/OpenGL");
+	Window = graphics::initialiseWindow(display::WINDOW_RESOLUTION, "Starbound-Radar/main");
 	glfwSetFramebufferSizeCallback(Window, framebufferSizeCallback);
 	glfwGetCursorPos(Window, &cursorPosition.x, &cursorPosition.y);
 	glEnable(GL_BLEND);
