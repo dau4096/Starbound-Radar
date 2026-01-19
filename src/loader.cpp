@@ -270,6 +270,11 @@ void loadXMLdata(std::string& xmlFilePath) {
 	getBodies(doc);
 	getRoutes(doc);
 	getSShips(doc);
+
+
+	//Calculate current state of the system;
+	bodies::evaluate();
+	spacecraft::evaluate();
 }
 
 }

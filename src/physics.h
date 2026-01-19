@@ -8,11 +8,15 @@
 
 namespace bodies {
 
+	void evaluate();
+
 }
 
 
 namespace spacecraft {
 	
+	void evaluate();
+
 }
 
 

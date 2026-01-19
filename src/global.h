@@ -24,6 +24,7 @@ namespace GLIndex {
 
 //Any indices required for OpenGL stuff.
 inline GLint genericVAO;
+inline GLint r1CircleVBO;
 
 }
 
@@ -35,6 +36,7 @@ enum CelestialType {
 	CT_STAR, //Anything stationary.
 	CT_PLANET, //Anything orbiting a star.
 	CT_SATELLITE, //Moons, Stations, anything orbiting a planet.
+	CT_GATE
 };
 
 

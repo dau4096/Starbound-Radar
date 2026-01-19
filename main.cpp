@@ -82,6 +82,7 @@ int main() {
 
 	graphics::prepareOpenGL();
 	std::string xmlFilePath = "data.xml";
+	std::cout << "Start UTC time: " << utils::getTimestamp() << std::endl;
 	loader::loadXMLdata(xmlFilePath);
 
 
@@ -95,6 +96,9 @@ int main() {
 
 		//Rendering logic here.
 		frame::draw();
+		//Calculate current state of the system;
+		bodies::evaluate();
+		spacecraft::evaluate();
 
 
 		float dt = glfwGetTime() - frameStart;

@@ -116,6 +116,11 @@ namespace utils {
 		return oss.str();
 	}
 
+	static inline time_t getTimestamp() {
+		//Returns UTC timestamp
+		return time(nullptr);
+	}
+
 
 
 
