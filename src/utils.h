@@ -118,7 +118,7 @@ namespace utils {
 
 	static inline time_t getTimestamp() {
 		//Returns UTC timestamp
-		return time(nullptr);
+		return (time(nullptr) % 0xFFFFFFFF) * sim::DEBUG_TIME_SCALING;
 	}
 
 

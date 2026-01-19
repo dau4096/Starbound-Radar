@@ -114,35 +114,42 @@ void getBodies(const pugi::xml_document& doc) {
 			xml::getString(starNode, "name", "STAR_"+starSuffix),
 			CT_STAR, //Type
 			xml::getIVec2(starNode, "position", glm::ivec2(0, 0)),
+			xml::getInt(starNode, "radius", 0.0f) * sim::SCALE_MULTIPLIER,
 			0.0f, 0.0f, nullptr //No orbit, No parent.
 		));
 		structs::CelestialBody* star = &data::bodies.back();
-		if (dev::SHOW_HEIRARCHY_CONSOLE) {std::cout << star->name << std::endl;}
+		if constexpr (dev::SHOW_HEIRARCHY_CONSOLE) {std::cout << star->name << std::endl;}
 
 
 		unsigned int planetIndex = 0u;
-		for (pugi::xml_node planetNode : starNode.children("planet")) {
+		auto planets = starNode.children("planet");
+		star->children.reserve(std::distance(planets.begin(), planets.end()));
+		for (pugi::xml_node planetNode : planets) {
 			//For every planet orbiting this star;
 			std::string planetSuffix = starSuffix + "_" + std::to_string(planetIndex);
 			data::bodies.emplace_back(structs::CelestialBody(
 				xml::getString(planetNode, "name", "PLANET_"+planetSuffix),
 				CT_PLANET, glm::ivec2(0, 0), //Type, start position (Gets overwritten when calculating orbit later)
+				xml::getInt(planetNode, "radius", 0.0f) * sim::SCALE_MULTIPLIER,
 				xml::getFloat(planetNode, "orbitalRadius", 0.0f) * sim::SCALE_MULTIPLIER,  //Mega-Metres (1000km)
 				xml::getFloat(planetNode, "orbitalPeriod", 0.0f) * sim::PERIOD_MULTIPLIER, //Days
 				star //Parent star.
 			));
 			structs::CelestialBody* planet = &data::bodies.back();
 			star->children.push_back(planet);
-			if (dev::SHOW_HEIRARCHY_CONSOLE) {std::cout << " - " << planet->name << std::endl;}
+			if constexpr (dev::SHOW_HEIRARCHY_CONSOLE) {std::cout << " - " << planet->name << std::endl;}
 
 
 			unsigned int satIndex = 0u;
-			for (pugi::xml_node satNode : planetNode.children("satellite")) {
+			auto satellites = planetNode.children("satellite");
+			planet->children.reserve(std::distance(satellites.begin(), satellites.end()));
+			for (pugi::xml_node satNode : satellites) {
 				//For every satellite orbiting this planet; [Moons, Stations.]
 				std::string satSuffix = planetSuffix + "_" + std::to_string(satIndex);
 				data::bodies.emplace_back(structs::CelestialBody(
 					xml::getString(satNode, "name", "SATELLITE_"+satSuffix),
 					CT_SATELLITE, glm::ivec2(0, 0), //Type, start position (Gets overwritten when calculating orbit later)
+					xml::getInt(satNode, "radius", 0.0f) * sim::SCALE_MULTIPLIER,
 					xml::getFloat(satNode, "orbitalRadius", 0.0f) * sim::SCALE_MULTIPLIER,  //Mega-Metres (1000km)
 					xml::getFloat(satNode, "orbitalPeriod", 0.0f) * sim::PERIOD_MULTIPLIER, //Days
 					planet //Parent planet.
@@ -150,14 +157,14 @@ void getBodies(const pugi::xml_document& doc) {
 				structs::CelestialBody* satellite = &data::bodies.back();
 				planet->children.push_back(satellite);
 				satIndex++;
-				if (dev::SHOW_HEIRARCHY_CONSOLE) {std::cout << "   = " << satellite->name << std::endl;}
+				if constexpr (dev::SHOW_HEIRARCHY_CONSOLE) {std::cout << "   = " << satellite->name << std::endl;}
 			}
 
 			planetIndex++;
 		}
 
 	}
-	if (dev::SHOW_HEIRARCHY_CONSOLE) {std::cout << std::endl;}
+	if constexpr (dev::SHOW_HEIRARCHY_CONSOLE) {std::cout << std::endl;}
 }
 
 //////// BODIES ////////
@@ -198,14 +205,14 @@ void getRoutes(const pugi::xml_document& doc) {
 			xml::getString(routeNode, "name", "INV-0000"),
 			getLocations(locationNames)
 		));
-		if (dev::SHOW_ROUTES_CONSOLE) {
+		if constexpr (dev::SHOW_ROUTES_CONSOLE) {
 			structs::Route route = data::routes.back();
 			std::cout << route.number << " : ";
 			for (std::string lName : locationNames) {std::cout << lName << " → ";}
 			std::cout << "..." << std::endl;
 		}
 	}
-	if (dev::SHOW_ROUTES_CONSOLE) {std::cout << std::endl;}
+	if constexpr (dev::SHOW_ROUTES_CONSOLE) {std::cout << std::endl;}
 }
 
 //////// ROUTES ////////
@@ -248,9 +255,9 @@ void getSShips(const pugi::xml_document& doc) {
 		);
 
 		data::spacecraft.push_back(ship);
-		if (dev::SHOW_SHIPS_CONSOLE) {std::cout << ship.name << " : " << routeNumber << std::endl;}
+		if constexpr (dev::SHOW_SHIPS_CONSOLE) {std::cout << ship.name << " : " << routeNumber << std::endl;}
 	}
-	if (dev::SHOW_SHIPS_CONSOLE) {std::cout << std::endl;}
+	if constexpr (dev::SHOW_SHIPS_CONSOLE) {std::cout << std::endl;}
 }
 
 //////// SHIPS ////////

@@ -104,7 +104,7 @@ static inline void bindUniformValue(GLuint shaderProgram, const GLchar* uniformN
 		glUniform1i(location, value);
 	}
 }
-static inline void bindUniformValue(GLuint shaderProgram, const GLchar* uniformName, size_t value) {
+static inline void bindUniformValue(GLuint shaderProgram, const GLchar* uniformName, unsigned int value) {
 	GLuint location = glGetUniformLocation(shaderProgram, uniformName);
 	if (location >= 0) {
 		glUniform1ui(location, value);
@@ -631,6 +631,7 @@ void prepareOpenGL() {
 
 
 	GLIndex::orbitLineShader = createShaderProgram("orbitLines.frag", "orbitLines.vert");
+	GLIndex::spriteShader = createShaderProgram("sprite.frag", "sprite.vert");
 
 	orbits::createR1CircleVBO();
 	GLIndex::projectionMatrix = glm::ortho(0.0f, float(currentRenderResolution.x), 0.0f, float(currentRenderResolution.y), -1.0f, 1.0f);
@@ -654,10 +655,9 @@ namespace frame {
 
 inline void renderingGeneric(const std::string& shaderName="") {
 	glBindVertexArray(GLIndex::genericVAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glBindVertexArray(0);
-	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-
+	
 	if (!shaderName.empty()) {
 		utils::GLErrorcheck(shaderName, true);
 	}
@@ -671,6 +671,16 @@ void bodies() {
 	for (structs::CelestialBody& body : data::bodies) {
 		//Draw the orbital line for each;
 		graphics::orbits::drawOrbit(&body);
+		//Draw the sprite for each;
+
+		glUseProgram(GLIndex::spriteShader);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "centre", body.position);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "radius", body.radius);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "scaling", globalScaling);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "offset", globalOffset);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "projectionMatrix", GLIndex::projectionMatrix);
+		renderingGeneric("spriteShader");
+		glUseProgram(0);
 	}
 	glLineWidth(1.0f);
 }
