@@ -1,0 +1,13 @@
+/* compute.comp */
+#version 460 core
+
+//Which values to use depends on how many dimensions are required.
+//These are the "best" values for each, that I've found.
+layout(local_size_x=32, local_size_y=1,  local_size_z=1) in;
+//layout(local_size_x=16, local_size_y=16, local_size_z=1) in;
+//layout(local_size_x=8,  local_size_y=8,  local_size_z=8) in;
+
+void main() {
+	uvec3 invocationIndices = gl_GlobalInvocationID.xyz;
+	//Do with this what you need, if Y/Z are dispatched as 1 they can be "ignored".
+}
