@@ -72,6 +72,23 @@ namespace graphics {
 
 
 	void prepareOpenGL();
+
+
+
+	namespace view {
+		inline void viewNext() {
+			//Wraps aroud.
+			data::currentCameraViewIndex = (++data::currentCameraViewIndex) % (data::views.size());
+			data::view = &(data::views[data::currentCameraViewIndex]);
+			std::cout << "Swapped to view \"" << data::view->name << "\" - Focussed on: [" << data::view->focusBody->name << "] - " << data::view->scale << "x" << std::endl;
+
+		}
+		inline void viewPrevious() {
+			data::currentCameraViewIndex = (data::currentCameraViewIndex + data::views.size() - 1u) % (data::views.size());
+			data::view = &(data::views[data::currentCameraViewIndex]);
+			std::cout << "Swapped to view \"" << data::view->name << "\" - Focussed on: [" << data::view->focusBody->name << "] - " << data::view->scale << "x" << std::endl;
+		}
+	}
 }
 
 

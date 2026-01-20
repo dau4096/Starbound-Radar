@@ -106,6 +106,14 @@ void getBodies(const pugi::xml_document& doc) {
 	//Gets all celestial bodies (Including unnatural satellites too.)
 	data::bodies.reserve(constants::NUMBER_OF_BODIES_TO_RESERVE); //Reserve space in the bodies dataset.
 	pugi::xpath_node_set starNodes = doc.select_nodes("//bodies/star");
+
+
+	if (starNodes.size() == 0u) {
+		//No bodies to focus on.
+		std::cout << "No bodies in the XML file - File must have at least 1 celestial body." << std::endl;
+		return;
+	}
+
 	for (unsigned int starIndex=0u; starIndex<starNodes.size(); starIndex++) {
 		//For every star in the file;
 		pugi::xml_node starNode = starNodes[starIndex].node();
@@ -127,11 +135,12 @@ void getBodies(const pugi::xml_document& doc) {
 		for (pugi::xml_node planetNode : planets) {
 			//For every planet orbiting this star;
 			std::string planetSuffix = starSuffix + "_" + std::to_string(planetIndex);
+			int planetOrbitalRadius = (xml::getFloat(planetNode, "orbitalRadius", 0.0f)*sim::SCALE_MULTIPLIER) + star->radius;
 			data::bodies.emplace_back(structs::CelestialBody(
 				xml::getString(planetNode, "name", "PLANET_"+planetSuffix),
 				CT_PLANET, glm::ivec2(0, 0), //Type, start position (Gets overwritten when calculating orbit later)
 				xml::getInt(planetNode, "radius", 0.0f) * sim::SCALE_MULTIPLIER,
-				xml::getFloat(planetNode, "orbitalRadius", 0.0f) * sim::SCALE_MULTIPLIER,  //Mega-Metres (1000km)
+				planetOrbitalRadius,  //Kilometres (km)
 				xml::getFloat(planetNode, "orbitalPeriod", 0.0f) * sim::PERIOD_MULTIPLIER, //Days
 				star //Parent star.
 			));
@@ -146,11 +155,12 @@ void getBodies(const pugi::xml_document& doc) {
 			for (pugi::xml_node satNode : satellites) {
 				//For every satellite orbiting this planet; [Moons, Stations.]
 				std::string satSuffix = planetSuffix + "_" + std::to_string(satIndex);
+				int satelliteOrbitalRadius = (xml::getFloat(satNode, "orbitalRadius", 0.0f)*sim::SCALE_MULTIPLIER) + planet->radius;
 				data::bodies.emplace_back(structs::CelestialBody(
 					xml::getString(satNode, "name", "SATELLITE_"+satSuffix),
 					CT_SATELLITE, glm::ivec2(0, 0), //Type, start position (Gets overwritten when calculating orbit later)
 					xml::getInt(satNode, "radius", 0.0f) * sim::SCALE_MULTIPLIER,
-					xml::getFloat(satNode, "orbitalRadius", 0.0f) * sim::SCALE_MULTIPLIER,  //Mega-Metres (1000km)
+					satelliteOrbitalRadius,  //Kilometres (km)
 					xml::getFloat(satNode, "orbitalPeriod", 0.0f) * sim::PERIOD_MULTIPLIER, //Days
 					planet //Parent planet.
 				));
@@ -263,6 +273,71 @@ void getSShips(const pugi::xml_document& doc) {
 //////// SHIPS ////////
 
 
+
+
+
+//////// CAMERA ANGLES ////////
+
+bool getFocussedBody(std::string name, structs::CelestialBody** bodyPTR) {
+	//Find first body with the same name (Case sensitive) and return a pointer to it.
+	for (structs::CelestialBody& body : data::bodies) {
+		if (body.name == name) {
+			*bodyPTR = &body;
+			return true; //Match the first result.
+		}
+	}
+	return false;
+}
+
+void getAngles(const pugi::xml_document& doc) {
+	pugi::xpath_node_set viewNodes = doc.select_nodes("//camera/view");
+
+	for (unsigned int viewIndex=0u; viewIndex<viewNodes.size(); viewIndex++) {
+		pugi::xml_node viewNode = viewNodes[viewIndex].node();
+
+		structs::CelestialBody* body = nullptr;
+		std::string bodyName = xml::getString(viewNode, "body", "");
+		bool success = getFocussedBody(bodyName, &body);
+		if (!success) {continue; /* Invalid view, no body to focus with this name. */}
+
+		data::views.push_back(structs::CameraView(
+			xml::getString(viewNode, "name", "VIEW_" + std::to_string(viewIndex)), body,
+			xml::getFloat(viewNode, "scale", 25u*body->radius),
+			xml::getIVec2(viewNode, "offset", glm::ivec2(0, 0))
+		));
+
+
+		if constexpr (dev::SHOW_VIEWS_CONSOLE) {
+			structs::CameraView view = data::views.back();
+			std::cout << view.name << " : origin=" << bodyName << " : " << view.scale << "x : (" << view.offset.x << ", " << view.offset.y << ")" << std::endl;
+		}
+	}
+	
+	if (data::views.size() == 0u) {
+		//No angles were provided in the file, or all were invalid. Assume the first celestial body is focussed.
+		std::cout << "No camera views were specified in the data XML file. Defaulting to first celestial body, and 25x its radius." << std::endl;
+		structs::CelestialBody* body = &(data::bodies[0]);
+		data::views.push_back(structs::CameraView(
+			"<FALLBACK_VIEW>", body, 25u*body->radius, glm::ivec2(0, 0)
+		));
+		if constexpr (dev::SHOW_VIEWS_CONSOLE) {
+			structs::CameraView view = data::views.back();
+			std::cout << view.name << " : origin=" << body->name << " : " << view.scale << "x : (" << view.offset.x << ", " << view.offset.y << ")" << std::endl;
+		}
+	}
+
+	data::currentCameraViewIndex = 0u;
+	data::view = &(data::views[0u]);
+
+	if constexpr (dev::SHOW_VIEWS_CONSOLE) {std::cout << std::endl;}
+}
+
+//////// CAMERA ANGLES ////////
+
+
+
+
+
 namespace loader {
 
 void loadXMLdata(std::string& xmlFilePath) {
@@ -277,6 +352,7 @@ void loadXMLdata(std::string& xmlFilePath) {
 	getBodies(doc);
 	getRoutes(doc);
 	getSShips(doc);
+	getAngles(doc);
 
 
 	//Calculate current state of the system;

@@ -10,7 +10,10 @@ inline GLFWwindow* Window;
 inline std::unordered_map<int, bool> keyMap = {
 	//GLFW Enums mapped to boolean values (True if pressed.)
 	{GLFW_KEY_ESCAPE, false},
+	{GLFW_KEY_E, false}, //Next view
+	{GLFW_KEY_Q, false}, //Previous view
 };
+inline std::unordered_map<int, bool> previousKeyMap = {};
 inline glm::dvec2 cursorPosition, cursorPositionPrevious, cursorDelta;
 
 
@@ -21,7 +24,7 @@ inline unsigned int frameNumber;
 
 
 inline float globalScaling = 1.0e-6f;     //Camera zoom
-inline glm::ivec2 globalOffset = display::RENDER_RESOLUTION / 2; //Camera translation
+inline glm::ivec2 globalOffset = glm::ivec2(0, 0); //Camera translation
 
 
 namespace GLIndex {
@@ -129,6 +132,19 @@ struct SpaceCraft {
 };
 
 
+
+//Camera view (Scale, Body to centre on)
+struct CameraView {
+	std::string name;		  //Name or short identified for the view.
+	CelestialBody* focusBody; //Body to centre view on.
+	float scale;			  //Scaling of distances.
+	glm::ivec2 offset;        //Camera offset from the body.
+
+	CameraView() : name("<VIEW_INVALID>"), focusBody(nullptr), scale(0.0f), offset(0, 0) {}
+	CameraView(std::string n, CelestialBody* cb, float s, glm::ivec2 o)
+		 : name(n), focusBody(cb), scale(s), offset(o) {}
+};
+
 }
 
 
@@ -138,6 +154,10 @@ namespace data {
 	inline std::vector<structs::CelestialBody> bodies = {};
 	inline std::vector<structs::Route> routes = {};
 	inline std::vector<structs::SpaceCraft> spacecraft = {};
+
+	inline unsigned int currentCameraViewIndex = 0u;
+	inline std::vector<structs::CameraView> views = {};
+	inline structs::CameraView* view = nullptr;
 }
 
 

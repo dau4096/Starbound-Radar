@@ -10,11 +10,12 @@ uniform float radius;
 uniform float scaling;
 uniform ivec2 offset;
 uniform mat4 projectionMatrix;
+uniform ivec2 resolution;
 
 
 void main() {
     vec2 pos = centre + (aPos * radius);
-    gl_Position = projectionMatrix * vec4(pos.xy * scaling + offset, 0.0f, 1.0f);
+    gl_Position = projectionMatrix * vec4(pos.xy * scaling + offset + (resolution / 2), 0.0f, 1.0f);
     fragPosition = pos;
 }
 

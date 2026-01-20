@@ -571,7 +571,7 @@ GLuint createAtomicCounter(unsigned int binding) {
 
 namespace orbits {
 
-#define NUM_LINE_SEGMENTS 128u
+#define NUM_LINE_SEGMENTS 512u
 void createR1CircleVBO() {
 	std::vector<glm::vec2> circleVertices;
 	for (unsigned int i=0u; i<NUM_LINE_SEGMENTS; i++) {
@@ -605,12 +605,13 @@ void drawOrbit(structs::CelestialBody* body) {
 	if (!body->hasParentBody) {return; /* No orbit line to draw. */}
 	glUseProgram(GLIndex::orbitLineShader);
 	glBindVertexArray(GLIndex::r1CircleVAO);
-	uniforms::bindUniformValue(GLIndex::orbitLineShader, "centre", body->parent->position);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "centre", body->parent->position - data::view->focusBody->position);
 	uniforms::bindUniformValue(GLIndex::orbitLineShader, "radius", body->orbitalRadius);
 	uniforms::bindUniformValue(GLIndex::orbitLineShader, "bodyPosition", body->position);
-	uniforms::bindUniformValue(GLIndex::orbitLineShader, "scaling", globalScaling);
-	uniforms::bindUniformValue(GLIndex::orbitLineShader, "offset", globalOffset);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "scaling", data::view->scale);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "offset", data::view->offset);
 	uniforms::bindUniformValue(GLIndex::orbitLineShader, "projectionMatrix", GLIndex::projectionMatrix);
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "resolution", static_cast<glm::ivec2>(currentRenderResolution));
 
 	//Draw the circle.
 	glDrawArrays(GL_LINE_LOOP, 0, NUM_LINE_SEGMENTS);
@@ -646,6 +647,8 @@ void prepareOpenGL() {
 	utils::GLErrorcheck("Initialisation", true); //Old basic debugging
 }
 
+
+
 }
 
 
@@ -657,7 +660,7 @@ inline void renderingGeneric(const std::string& shaderName="") {
 	glBindVertexArray(GLIndex::genericVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glBindVertexArray(0);
-	
+
 	if (!shaderName.empty()) {
 		utils::GLErrorcheck(shaderName, true);
 	}
@@ -674,11 +677,12 @@ void bodies() {
 		//Draw the sprite for each;
 
 		glUseProgram(GLIndex::spriteShader);
-		uniforms::bindUniformValue(GLIndex::spriteShader, "centre", body.position);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "centre", body.position - data::view->focusBody->position);
 		uniforms::bindUniformValue(GLIndex::spriteShader, "radius", body.radius);
-		uniforms::bindUniformValue(GLIndex::spriteShader, "scaling", globalScaling);
-		uniforms::bindUniformValue(GLIndex::spriteShader, "offset", globalOffset);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "scaling", data::view->scale);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "offset", data::view->offset);
 		uniforms::bindUniformValue(GLIndex::spriteShader, "projectionMatrix", GLIndex::projectionMatrix);
+		uniforms::bindUniformValue(GLIndex::spriteShader, "resolution", static_cast<glm::ivec2>(currentRenderResolution));
 		renderingGeneric("spriteShader");
 		glUseProgram(0);
 	}

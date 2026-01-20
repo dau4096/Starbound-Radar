@@ -64,6 +64,7 @@ namespace dev {
 	constexpr bool SHOW_HEIRARCHY_CONSOLE = true;
 	constexpr bool SHOW_ROUTES_CONSOLE = true;
 	constexpr bool SHOW_SHIPS_CONSOLE = true;
+	constexpr bool SHOW_VIEWS_CONSOLE = true;
 	//Etc;
-	constexpr bool DEBUG_BODY_LOCATIONS = true;
+	constexpr bool DEBUG_BODY_LOCATIONS = false;
 }

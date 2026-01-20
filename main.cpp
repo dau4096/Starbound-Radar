@@ -32,16 +32,25 @@ void framebufferSizeCallback(GLFWwindow* Window, int width, int height) {
 
 
 
+bool pressedThisFrame(int glfwEnum) {
+	return keyMap[glfwEnum] && !previousKeyMap[glfwEnum];
+}
+
+
 void handleInputs() {
 	glfwPollEvents();
 
 	//Get keyboard inputs for this frame
+	previousKeyMap = keyMap; //Save last frame's inputs.
 	for (std::pair<int, bool> pair : keyMap) {
 		int keyState = glfwGetKey(Window, pair.first);
 		if (keyState == GLFW_PRESS) {keyMap[pair.first] = true;}
 		else if (keyState == GLFW_RELEASE) {keyMap[pair.first] = false;}
 	}
 
+
+	if (pressedThisFrame(GLFW_KEY_E)) {graphics::view::viewNext();}
+	if (pressedThisFrame(GLFW_KEY_Q)) {graphics::view::viewPrevious();}
 
 	//Mouse controls;
 	cursorDelta = cursorPosition - cursorPositionPrevious;
@@ -90,6 +99,7 @@ int main() {
 	frameNumber = 0u;
 	while (!glfwWindowShouldClose(Window)) {
 		double frameStart = glfwGetTime();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear screen.
 		handleInputs();
 		if (keyMap[GLFW_KEY_ESCAPE]) {break; /* Quit Immediately, ESC pressed. */}
 

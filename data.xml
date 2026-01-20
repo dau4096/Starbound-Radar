@@ -36,11 +36,22 @@
 
 
 
+
+<!-- Camera views, centred on different bodies -->
+<camera>
+	<view name="Inner Solar System" body="Helios" scale="0.000001" offset="0 0" />
+	<view name="Earth and Moon" body="Earth" scale="0.000625" offset="0 0" />
+	<view name="Earth and ISS" body="Earth" scale="0.025" offset="0 0" />
+	<view name="Mars and Moons" body="Mars" scale="0.01" offset="0 0" />
+</camera>
+
+
+
 <!-- Spacecraft routes. -->
 <routes>
 
-	<!-- Martian moons only -->
-	<route name="MMO-0000" locations="Phobos,Deimos" />
+	<!-- Martian system only -->
+	<route name="MSO-0000" locations="Mars,Phobos,Deimos" />
 
 	<!-- Goes Mercury, Earth, Selene (The Moon), Earth, then loops. -->
 	<route name="MESE-0001" locations="Mercury,Earth,Selene,Earth" />
@@ -52,7 +63,7 @@
 <!-- Spacecraft -->
 <spacecraft>
 
-	<!-- Ship travelling along the mars moons route. -->
-	<ship name="Mars Ship [Can't think of a good name :(]" route="MMO-0000" />
+	<!-- Ship travelling along the mars system route. -->
+	<ship name="M.Watney [MAV]" route="MSO-0000" />
 
 </spacecraft>
