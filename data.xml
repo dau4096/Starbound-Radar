@@ -7,23 +7,23 @@
 <bodies>
 
 	<!-- Our sun, Sol, Helios. Helios sounds cooler so I'm keeping it for now. -->
-	<star name="Helios" position="0 0" radius="696.340">
+	<star name="Helios" colour="255 255 255" position="0 0" radius="696.340">
 
 		<!-- Mercury and Venus have no moons. -->
-		<planet name="Mercury" radius="2.4397" orbitalRadius="70000.0" orbitalPeriod="88.0" />
-		<planet name="Venus" radius="6.0518" orbitalRadius="108200" orbitalPeriod="225" />
+		<planet name="Mercury" colour="127 127 127" radius="2.4397" orbitalRadius="70000.0" orbitalPeriod="88.0" />
+		<planet name="Venus" colour="196 96 96" radius="6.0518" orbitalRadius="108200" orbitalPeriod="225" />
 
 		<!-- Earth has the moon, and I included the ISS for an example of a man-made satellite. -->
-		<planet name="Earth" radius="6.0" orbitalRadius="149600.0" orbitalPeriod="365.25">
+		<planet name="Earth" colour="32 32 255" radius="6.0" orbitalRadius="149600.0" orbitalPeriod="365.25">
 			<!-- I like the greek name for the moon better than "Moon" or "Luna", sue me. -->
-			<satellite name="Selene" radius="1.7374" orbitalRadius="384.0" orbitalPeriod="29.5"/>
-			<satellite name="ISS" radius="0.0000545" orbitalRadius="0.4" orbitalPeriod="0.0645" /> <!-- ISS takes 92.9 minutes to orbit. Period is in days. -->
+			<satellite name="Selene" colour="127 127 127" radius="1.7374" orbitalRadius="384.0" orbitalPeriod="29.5"/>
+			<satellite name="ISS" colour="255 255 255" radius="0.0000545" orbitalRadius="0.4" orbitalPeriod="0.0645" /> <!-- ISS takes 92.9 minutes to orbit. Period is in days. -->
 		</planet>
 
 		<!-- Mars has my favourite moon in the system - Deimos. Oh, and Phobos too. -->
-		<planet name="Mars" radius="3.3895" orbitalRadius="228000.0" orbitalPeriod="687.0">
-			<satellite name="Phobos" radius="0.011267" orbitalRadius="6.0" orbitalPeriod="0.333333"/> <!-- 8hrs, 1/3 of a day. -->
-			<satellite name="Deimos" radius="0.0062" orbitalRadius="23.46" orbitalPeriod="1.25"/>
+		<planet name="Mars" colour="255 32 32" radius="3.3895" orbitalRadius="228000.0" orbitalPeriod="687.0">
+			<satellite name="Phobos" colour="196 96 96" radius="0.011267" orbitalRadius="6.0" orbitalPeriod="0.333333"/> <!-- 8hrs, 1/3 of a day. -->
+			<satellite name="Deimos" colour="127 127 127" radius="0.0062" orbitalRadius="23.46" orbitalPeriod="1.25"/>
 		</planet>
 
 

@@ -612,6 +612,7 @@ void drawOrbit(structs::CelestialBody* body) {
 	uniforms::bindUniformValue(GLIndex::orbitLineShader, "offset", data::view->offset);
 	uniforms::bindUniformValue(GLIndex::orbitLineShader, "projectionMatrix", GLIndex::projectionMatrix);
 	uniforms::bindUniformValue(GLIndex::orbitLineShader, "resolution", static_cast<glm::ivec2>(currentRenderResolution));
+	uniforms::bindUniformValue(GLIndex::orbitLineShader, "colour", body->colour);
 
 	//Draw the circle.
 	glDrawArrays(GL_LINE_LOOP, 0, NUM_LINE_SEGMENTS);

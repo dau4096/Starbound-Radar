@@ -28,6 +28,14 @@ static inline glm::vec2 parseVec2(const std::string& str) {
 };
 
 
+static inline glm::vec3 parseVec3(const std::string& str) {
+	std::istringstream ss(str);
+	glm::vec3 v;
+	ss >> v.x >> v.y >> v.z;
+	return v;
+};
+
+
 static inline int getInt(const pugi::xml_node& node, std::string attrName, int defaultValue=0) {
 	pugi::xml_attribute attr = node.attribute(attrName.c_str());
 	if (attr) {
@@ -77,6 +85,13 @@ static inline glm::ivec2 getIVec2(const pugi::xml_node& node, std::string attrNa
 	return static_cast<glm::ivec2>(getVec2(node, attrName, defaultValue));
 }
 
+static inline glm::vec3 getVec3(const pugi::xml_node& node, std::string attrName, glm::vec3 defaultValue=glm::vec3(0.0f, 0.0f, 0.0f)) {
+	pugi::xml_attribute attr = node.attribute(attrName.c_str());
+	if (attr) {
+		return parseVec3(attr.as_string());
+	}
+	return defaultValue;
+}
 
 static inline std::vector<std::string> getStringList(const pugi::xml_node& node, std::string attrName, std::string defaultValue="") {
 	std::string str = getString(node, attrName, defaultValue);
@@ -118,10 +133,13 @@ void getBodies(const pugi::xml_document& doc) {
 		//For every star in the file;
 		pugi::xml_node starNode = starNodes[starIndex].node();
 		std::string starSuffix = std::to_string(starIndex);
+		glm::vec3 colour = xml::getVec3(starNode, "colour", glm::vec3(0.0f, 0.0f, 0.0f)) / 255.0f;
+		utils::printVec3(colour);
 		data::bodies.emplace_back(structs::CelestialBody(
 			xml::getString(starNode, "name", "STAR_"+starSuffix),
 			CT_STAR, //Type
 			xml::getIVec2(starNode, "position", glm::ivec2(0, 0)),
+			colour, //Colour of its orbital line.
 			xml::getInt(starNode, "radius", 0.0f) * sim::SCALE_MULTIPLIER,
 			0.0f, 0.0f, nullptr //No orbit, No parent.
 		));
@@ -136,9 +154,12 @@ void getBodies(const pugi::xml_document& doc) {
 			//For every planet orbiting this star;
 			std::string planetSuffix = starSuffix + "_" + std::to_string(planetIndex);
 			int planetOrbitalRadius = (xml::getFloat(planetNode, "orbitalRadius", 0.0f)*sim::SCALE_MULTIPLIER) + star->radius;
+			glm::vec3 colour = xml::getVec3(planetNode, "colour", glm::vec3(0.0f, 0.0f, 0.0f)) / 255.0f;
+			utils::printVec3(colour);
 			data::bodies.emplace_back(structs::CelestialBody(
 				xml::getString(planetNode, "name", "PLANET_"+planetSuffix),
 				CT_PLANET, glm::ivec2(0, 0), //Type, start position (Gets overwritten when calculating orbit later)
+				colour, //Colour of its orbital line.
 				xml::getInt(planetNode, "radius", 0.0f) * sim::SCALE_MULTIPLIER,
 				planetOrbitalRadius,  //Kilometres (km)
 				xml::getFloat(planetNode, "orbitalPeriod", 0.0f) * sim::PERIOD_MULTIPLIER, //Days
@@ -156,9 +177,12 @@ void getBodies(const pugi::xml_document& doc) {
 				//For every satellite orbiting this planet; [Moons, Stations.]
 				std::string satSuffix = planetSuffix + "_" + std::to_string(satIndex);
 				int satelliteOrbitalRadius = (xml::getFloat(satNode, "orbitalRadius", 0.0f)*sim::SCALE_MULTIPLIER) + planet->radius;
+				glm::vec3 colour = xml::getVec3(satNode, "colour", glm::vec3(0.0f, 0.0f, 0.0f)) / 255.0f;
+				utils::printVec3(colour);
 				data::bodies.emplace_back(structs::CelestialBody(
 					xml::getString(satNode, "name", "SATELLITE_"+satSuffix),
 					CT_SATELLITE, glm::ivec2(0, 0), //Type, start position (Gets overwritten when calculating orbit later)
+					colour, //Colour of its orbital line.
 					xml::getInt(satNode, "radius", 0.0f) * sim::SCALE_MULTIPLIER,
 					satelliteOrbitalRadius,  //Kilometres (km)
 					xml::getFloat(satNode, "orbitalPeriod", 0.0f) * sim::PERIOD_MULTIPLIER, //Days

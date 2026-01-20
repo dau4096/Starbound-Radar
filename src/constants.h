@@ -31,7 +31,7 @@ namespace sim {
 	//Scaling constants
 	constexpr unsigned int PERIOD_MULTIPLIER = 86400u; //86,400 seconds in a day.
 	constexpr unsigned int SCALE_MULTIPLIER = 1000u; //Megametres, 1 unit is 1km.
-	constexpr unsigned int DEBUG_TIME_SCALING = 100u; //Debugging, speeds up time.
+	constexpr unsigned int DEBUG_TIME_SCALING = 1u; //Debugging, speeds up time.
 	constexpr float TIME_PRECISION = 0.125f; //Precision to 1/8ths.
 }
 

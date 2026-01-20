@@ -57,6 +57,7 @@ struct CelestialBody {
 	CelestialType type;		//What sort of body?
 	glm::ivec2 position;  	//Current position.
 	unsigned int radius;	//Radius of the body.
+	glm::vec3 colour;		//Colour of its orbital line.
 
 	bool hasParentBody;		//Should orbit around some parent body?
 	CelestialBody* parent;	//Star to orbit around.
@@ -66,9 +67,11 @@ struct CelestialBody {
 
 	std::vector<CelestialBody*> children; //Child bodies.
 
-	CelestialBody() : name("<BODY_INVALID>"), type(CT_INVALID), position(0.0f, 0.0f), radius(0.0f), hasParentBody(false), parent(nullptr), orbitalRadius(0.0f), orbitalPeriod(0.0f), children() {}
-	CelestialBody(std::string n, CelestialType t, glm::vec2 pos, unsigned int bR, float oR, float p, CelestialBody* parent=nullptr)
-		 : name(n), type(t), position(pos), radius(bR), hasParentBody(parent != nullptr), parent(parent), orbitalRadius(oR), orbitalPeriod(p), children() {}
+	CelestialBody()
+		 : name("<BODY_INVALID>"), type(CT_INVALID), position(0.0f, 0.0f), colour(0.0f, 0.0f, 0.0f),
+		   radius(0.0f), hasParentBody(false), parent(nullptr), orbitalRadius(0.0f), orbitalPeriod(0.0f), children() {}
+	CelestialBody(std::string n, CelestialType t, glm::vec2 pos, glm::vec3 c, unsigned int bR, float oR, float p, CelestialBody* parent=nullptr)
+		 : name(n), type(t), position(pos), colour(c), radius(bR), hasParentBody(parent != nullptr), parent(parent), orbitalRadius(oR), orbitalPeriod(p), children() {}
 };
 
 
