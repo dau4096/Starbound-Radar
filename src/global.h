@@ -25,6 +25,7 @@ inline unsigned int frameNumber;
 
 inline float globalScaling = 1.0e-6f;     //Camera zoom
 inline glm::ivec2 globalOffset = glm::ivec2(0, 0); //Camera translation
+inline unsigned int simSpeed = 1u;
 
 
 namespace GLIndex {

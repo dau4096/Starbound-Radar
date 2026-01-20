@@ -116,9 +116,9 @@ namespace utils {
 		return oss.str();
 	}
 
-	static inline time_t getTimestamp() {
+	static time_t getTimestamp(bool useMultiplier=true) {
 		//Returns UTC timestamp
-		return (time(nullptr) % 0xFFFFFFFF) * sim::DEBUG_TIME_SCALING;
+		return time(nullptr) * ((useMultiplier) ? (sim::DEBUG_TIME_SCALING * simSpeed) : 1);
 	}
 
 

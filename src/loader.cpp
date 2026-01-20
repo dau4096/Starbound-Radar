@@ -134,7 +134,6 @@ void getBodies(const pugi::xml_document& doc) {
 		pugi::xml_node starNode = starNodes[starIndex].node();
 		std::string starSuffix = std::to_string(starIndex);
 		glm::vec3 colour = xml::getVec3(starNode, "colour", glm::vec3(0.0f, 0.0f, 0.0f)) / 255.0f;
-		utils::printVec3(colour);
 		data::bodies.emplace_back(structs::CelestialBody(
 			xml::getString(starNode, "name", "STAR_"+starSuffix),
 			CT_STAR, //Type
@@ -155,7 +154,6 @@ void getBodies(const pugi::xml_document& doc) {
 			std::string planetSuffix = starSuffix + "_" + std::to_string(planetIndex);
 			int planetOrbitalRadius = (xml::getFloat(planetNode, "orbitalRadius", 0.0f)*sim::SCALE_MULTIPLIER) + star->radius;
 			glm::vec3 colour = xml::getVec3(planetNode, "colour", glm::vec3(0.0f, 0.0f, 0.0f)) / 255.0f;
-			utils::printVec3(colour);
 			data::bodies.emplace_back(structs::CelestialBody(
 				xml::getString(planetNode, "name", "PLANET_"+planetSuffix),
 				CT_PLANET, glm::ivec2(0, 0), //Type, start position (Gets overwritten when calculating orbit later)
@@ -178,7 +176,6 @@ void getBodies(const pugi::xml_document& doc) {
 				std::string satSuffix = planetSuffix + "_" + std::to_string(satIndex);
 				int satelliteOrbitalRadius = (xml::getFloat(satNode, "orbitalRadius", 0.0f)*sim::SCALE_MULTIPLIER) + planet->radius;
 				glm::vec3 colour = xml::getVec3(satNode, "colour", glm::vec3(0.0f, 0.0f, 0.0f)) / 255.0f;
-				utils::printVec3(colour);
 				data::bodies.emplace_back(structs::CelestialBody(
 					xml::getString(satNode, "name", "SATELLITE_"+satSuffix),
 					CT_SATELLITE, glm::ivec2(0, 0), //Type, start position (Gets overwritten when calculating orbit later)
@@ -377,6 +374,12 @@ void loadXMLdata(std::string& xmlFilePath) {
 	getRoutes(doc);
 	getSShips(doc);
 	getAngles(doc);
+
+	auto n = doc.select_nodes("//meta");
+	if (n.size() > 0u) {
+		pugi::xml_node metaNode = n[0].node();
+		simSpeed = static_cast<unsigned int>(abs(xml::getInt(metaNode, "simSpeed", 1)));
+	}
 
 
 	//Calculate current state of the system;

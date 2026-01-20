@@ -21,7 +21,6 @@ void calculateBody(time_t UTC, structs::CelestialBody* parentBody, structs::Cele
 		UTC % static_cast<unsigned int>(ceil(thisBody->orbitalPeriod/sim::TIME_PRECISION))
 	);
 	double a = (days / thisBody->orbitalPeriod) * 2.0f * constants::PI;
-	//std::cout << UTC << " → " << days << " " << a << std::endl;
 	glm::vec2 offset = glm::vec2(cos(a), sin(a)) * thisBody->orbitalRadius;
 	thisBody->position = centreOfRotation + offset;
 	if (dev::DEBUG_BODY_LOCATIONS) {std::cout << thisBody->name << " : (" << thisBody->position.x << ", " << thisBody->position.y << ")" << std::endl;}

@@ -32,7 +32,7 @@ namespace sim {
 	constexpr unsigned int PERIOD_MULTIPLIER = 86400u; //86,400 seconds in a day.
 	constexpr unsigned int SCALE_MULTIPLIER = 1000u; //Megametres, 1 unit is 1km.
 	constexpr unsigned int DEBUG_TIME_SCALING = 1u; //Debugging, speeds up time.
-	constexpr float TIME_PRECISION = 0.125f; //Precision to 1/8ths.
+	constexpr float TIME_PRECISION = 1.0f / 16.0f; //Precision to 1/16ths.
 }
 
 namespace display {
@@ -61,9 +61,9 @@ namespace dev {
 
 	//Debug
 	//Loader;
-	constexpr bool SHOW_HEIRARCHY_CONSOLE = true;
-	constexpr bool SHOW_ROUTES_CONSOLE = true;
-	constexpr bool SHOW_SHIPS_CONSOLE = true;
+	constexpr bool SHOW_HEIRARCHY_CONSOLE = false;
+	constexpr bool SHOW_ROUTES_CONSOLE = false;
+	constexpr bool SHOW_SHIPS_CONSOLE = false;
 	constexpr bool SHOW_VIEWS_CONSOLE = true;
 	//Etc;
 	constexpr bool DEBUG_BODY_LOCATIONS = false;

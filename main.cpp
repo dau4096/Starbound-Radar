@@ -91,7 +91,7 @@ int main() {
 
 	graphics::prepareOpenGL();
 	std::string xmlFilePath = "data.xml";
-	std::cout << "Start UTC time: " << utils::getTimestamp() << std::endl;
+	std::cout << "Start UTC time: " << utils::getTimestamp(false) << std::endl;
 	loader::loadXMLdata(xmlFilePath);
 
 
