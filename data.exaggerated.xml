@@ -1,0 +1,71 @@
+<!-- data.xml -->
+<?xml version="1.1" encoding="UTF-8"?>
+<!-- Contains data relevant to Starbound-Radar. 40x smaller than the main dataset, planets/moons 40x bigger. -->
+
+<meta simSpeed="10" />
+
+
+<!-- Celestial Objects -->
+<bodies>
+
+	<!-- Our sun, Sol, Helios. Helios sounds cooler so I'm keeping it for now. -->
+	<star name="Helios" colour="255 255 255" position="0 0" radius="696.340">
+
+		<!-- Mercury and Venus have no moons. -->
+		<planet name="Mercury" colour="127 127 148" radius="96" orbitalRadius="1750.0" orbitalPeriod="0.022" />
+		<planet name="Venus" colour="196 96 96" radius="240" orbitalRadius="2705" orbitalPeriod="0.05625" />
+
+		<!-- Earth has the moon, and I included the ISS for an example of a man-made satellite. -->
+		<planet name="Earth" colour="32 32 255" radius="240" orbitalRadius="3740.0" orbitalPeriod="0.0913125">
+			<!-- I like the greek name for the moon better than "Moon" or "Luna", sue me. -->
+			<satellite name="Selene" colour="127 127 127" radius="68" orbitalRadius="9.6" orbitalPeriod="0.007375"/>
+			<satellite name="ISS" colour="255 255 255" radius="0.002" orbitalRadius="0.01" orbitalPeriod="0.000016125" /> <!-- ISS takes 92.9 minutes to orbit. Period is in days. -->
+		</planet>
+
+		<!-- Mars has my favourite moon in the system - Deimos. Oh, and Phobos too. -->
+		<planet name="Mars" colour="255 32 32" radius="134" orbitalRadius="5700.0" orbitalPeriod="0.17175">
+			<satellite name="Phobos" colour="196 96 96" radius="0.44" orbitalRadius="0.15" orbitalPeriod="0.00008333334"/> <!-- 8hrs, 1/3 of a day. -->
+			<satellite name="Deimos" colour="127 127 127" radius="0.248" orbitalRadius="0.5865" orbitalPeriod="0.0003125"/>
+		</planet>
+
+
+
+		<!-- Outer planets TBA. -->
+
+	</star>
+
+</bodies>
+
+
+
+
+<!-- Camera views, centred on different bodies -->
+<camera>
+	<view name="Inner Solar System" body="Helios" scale="0.00004" offset="0 0" />
+	<view name="Earth and Moon" body="Earth" scale="0.00625" offset="0 0" />
+	<view name="Earth and ISS" body="Earth" scale="0.025" offset="0 0" />
+	<view name="Mars and Moons" body="Mars" scale="0.05" offset="0 0" />
+</camera>
+
+
+
+<!-- Spacecraft routes. -->
+<routes>
+
+	<!-- Martian system only -->
+	<route name="MSO-0000" locations="Mars,Phobos,Deimos" />
+
+	<!-- Goes Mercury, Earth, Selene (The Moon), Earth, then loops. -->
+	<route name="MESE-0001" locations="Mercury,Earth,Selene,Earth" />
+
+</routes>
+
+
+
+<!-- Spacecraft -->
+<spacecraft>
+
+	<!-- Ship travelling along the mars system route. -->
+	<ship name="M.Watney [MAV]" route="MSO-0000" />
+
+</spacecraft>
